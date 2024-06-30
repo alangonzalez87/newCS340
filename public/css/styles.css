@@ -3,6 +3,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
+  
 }
 
 
@@ -174,4 +175,54 @@ nav ul li:hover {
       margin-top: 20px; 
       left: auto; 
   }
+}
+/* public/css/styles.css */
+
+#inv-display {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  list-style-type: none;
+  padding-left: 0;
+}
+
+#inv-display li {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+#inv-display li img {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin-bottom: 10px;
+}
+
+#inv-display li .namePrice {
+  text-align: center;
+}
+
+#inv-display li .namePrice h2 {
+  font-size: 1.2em;
+  transition: font-size 0.3s ease;
+}
+
+#inv-display li .namePrice h2 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+#inv-display li .namePrice h2:hover {
+  font-size: 1.5em;
+  color: #007bff; 
+}
+
+#inv-display li .namePrice span {
+  display: block;
+  margin-top: 10px;
+  font-size: 1.1em;
+  color: #555;
 }
