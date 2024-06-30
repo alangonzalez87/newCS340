@@ -28,9 +28,9 @@ app.get('/', (req, res) => {
 });
 app.use("/inv", inventoryRoute)
 
-app.get("/", baseController.buildHome)
+// app.get("/", baseController.buildHome)
 
-// app.get("/", utilities.handleErrors(baseController.buildHome))
+app.get("/", utilities.handleErrors(baseController.buildHome))
 
 app.get('/force-error', (req, res, next) => {
   const error = new Error('This is a forced error.');
@@ -41,23 +41,18 @@ app.get('/force-error', (req, res, next) => {
 
 
 //errors
-app.use((req, res, next) => {
-  const error = new Error('Not Found');
-  error.status = 404;
-  next(error);
-});
-
-
 app.use(async (err, req, res, next) => {
-  let nav = await utilities.getNav();
-  console.error(`Error at: "${req.originalUrl}": ${err.message}`);
-  res.status(err.status || 500).render("errors/error", {
+  let nav = await utilities.getNav()
+  console.error(`Error at: "${req.originalUrl}": ${err.message}`)
+  if(err.status == 404){ message = err.message} else {message = 'Oh no! There was a crash. Maybe try a different route?'}
+  res.render("errors/error", {
     title: err.status || 'Server Error',
-    message: err.message,
-    nav: nav
-  });
-  console.log(err);
-});
+    message,
+    nav
+  })
+})
+
+
 
 
 //static 

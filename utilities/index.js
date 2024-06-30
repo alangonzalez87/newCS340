@@ -56,7 +56,7 @@ Util.buildClassificationGrid = async function(data){
   }
   return grid
 }
+Util.handleErrors=fn => (req,res,next)=> Promise.resolve(Fn(req,res,next)).catch(next)
 
 module.exports = Util
 
-// Util.handleErrors=fn => (req,res,next)=> Promise.resolve(Fn(req,res,next)).catch(next)
