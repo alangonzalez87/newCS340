@@ -4,58 +4,59 @@ const env = require("dotenv").config();
 const app = express();
 const static = require("./routes/static");
 const utilities = require('./utilities/index');
-const baseController = require("./controllers/baseController")
-const inventoryRoute = require("./routes/inventoryRoute")
-
+const baseController = require("./controllers/baseController");
+const inventoryRoute = require("./routes/inventoryRoute");
+const session = require("express-session");
+const pool = require('./database/');
 
 app.set("view engine", "ejs");
 app.use(expressLayouts);
 app.set("layout", "layouts/layout");
 
-
 app.use(express.static('public'));
 
-//routes
+// Session Middleware
+app.use(session({
+  store: new (require('connect-pg-simple')(session))({
+    createTableIfMissing: true,
+    pool,
+  }),
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
+  name: 'sessionId',
+}));
 
+// Flash Messages Middleware
+app.use(require('connect-flash')());
+app.use(function(req, res, next){
+  res.locals.messages = require('express-messages')(req, res);
+  next();
+});
+
+// Add nav to response locals
 app.use(async (req, res, next) => {
   res.locals.nav = await utilities.getNav();
   next();
 });
 
-app.get('/', (req, res) => {
-  
-  res.render('index', {title: 'home', });
-});
-app.use("/inv", inventoryRoute)
+// Routes
+app.get('/', baseController.buildHome);
+app.use("/inv", inventoryRoute);
 
-// app.get("/", baseController.buildHome)
-
-app.get("/", utilities.handleErrors(baseController.buildHome))
-
-app.get('/force-error', (req, res, next) => {
-  const error = new Error('This is a forced error.');
-  error.status = 500;
-  next(error);
-});
-
-
-
-//errors
+// Error Handling
 app.use(async (err, req, res, next) => {
-  let nav = await utilities.getNav()
-  console.error(`Error at: "${req.originalUrl}": ${err.message}`)
-  if(err.status == 404){ message = err.message} else {message = 'Oh no! There was a crash. Maybe try a different route?'}
+  let nav = await utilities.getNav();
+  console.error(`Error at: "${req.originalUrl}": ${err.message}`);
+  const message = err.status == 500 ? err.message : ' Oh no! There was a crash. Maybe try a different route?';
   res.render("errors/error", {
     title: err.status || 'Server Error',
     message,
-    nav
-  })
-})
+    nav,
+  });
+});
 
-
-
-
-//static 
+// Static Routes
 app.use(static);
 
 const port = process.env.PORT || 3000;

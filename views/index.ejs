@@ -2,8 +2,16 @@
 <%- include('partials/header') %>
 <%- include('partials/navigation') %>
 
- <!-- Encabezado principal -->
+ 
  <h1>Welcome to CSE Motors!</h1>
+
+ <% if (messages('notice').length > 0) { %>
+    <div class="flash-messages">
+      <%- messages('notice') %>
+    </div>
+  <% } else { %>
+    <div>No flash messages</div> <!-- Mensaje de depuración -->
+  <% } %>
             
  
  <img class="imagen-delorean" src="/images/vehicles/Delorean.jpg" alt="Descripción de la imagen">

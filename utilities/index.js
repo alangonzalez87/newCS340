@@ -33,7 +33,7 @@ Util.buildClassificationGrid = async function(data){
     grid = '<ul id="inv-display">'
     data.forEach(vehicle => { 
       grid += '<li>'
-      grid +=  '<a href="../../inv/detail/'+ vehicle.inv_id 
+      grid +=  '<a href="../../inv/detail/'+ vehicle.inventory_id 
       + '" title="View ' + vehicle.inv_make + ' '+ vehicle.inv_model 
       + 'details"><img src="' + vehicle.inv_thumbnail 
       +'" alt="Image of '+ vehicle.inv_make + ' ' + vehicle.inv_model 
@@ -41,7 +41,7 @@ Util.buildClassificationGrid = async function(data){
       grid += '<div class="namePrice">'
       grid += '<hr />'
       grid += '<h2>'
-      grid += '<a href="../../inv/detail/' + vehicle.inv_id +'" title="View ' 
+      grid += '<a href="../../inv/detail/' + vehicle.inventory_id +'" title="View ' 
       + vehicle.inv_make + ' ' + vehicle.inv_model + ' details">' 
       + vehicle.inv_make + ' ' + vehicle.inv_model + '</a>'
       grid += '</h2>'
@@ -56,6 +56,30 @@ Util.buildClassificationGrid = async function(data){
   }
   return grid
 }
+
+/* **************************************
+* Build the vehicle detail HTML
+* ************************************ */
+Util.buildVehicleDetailHTML = function(vehicle) {
+  console.log('Building vehicle detail HTML with data:', vehicle);
+  let html = `
+    <div class="vehicle-detail">
+      <h1>${vehicle.inv_make} ${vehicle.inv_model}</h1>
+      <img src="${vehicle.inv_image}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model}">
+      <p>${vehicle.inv_description}</p>
+      <p>Price: $${new Intl.NumberFormat('en-US').format(vehicle.inv_price)}</p>
+      <h2>Specifications:</h2>
+      <ul>
+  `
+  
+  
+  html += `
+      </ul>
+    </div>
+  `
+  return html
+}
+
 Util.handleErrors=fn => (req,res,next)=> Promise.resolve(Fn(req,res,next)).catch(next)
 
 module.exports = Util
