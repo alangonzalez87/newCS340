@@ -18,10 +18,12 @@ async function getInventoryByClassificationId(classification_id) {
       ON i.classification_id = c.classification_id 
       WHERE i.classification_id = $1`,
       [classification_id]
-    )
-    return data.rows
+    );
+    return data.rows;
   } catch (error) {
-    console.error("getclassificationsbyid error " + error)
+    
+    console.error('Error fetching inventory by classification ID:', error);
+    throw error; 
   }
 }
 
@@ -44,8 +46,60 @@ async function getVehicleById(vehicleId) {
   }
 }
 
+// inventory-model.js
+
+
+
+async function addClassification(classification_name) {
+  try {
+    const sql = "INSERT INTO classification (classification_name) VALUES ($1) RETURNING *"
+    return await pool.query(sql, [classification_name])
+  } catch (error) {
+    console.error("Error adding classification:", error)
+    throw error
+  }
+}
+
+const inventoryModel = {};
+
+inventoryModel.addInventory = async function ({
+  inv_make,
+  inv_model,
+  inv_year,
+  inv_description,
+  inv_image,
+  inv_thumbnail,
+  inv_price,
+  inv_miles,
+  inv_color,
+  classification_id,
+}) {
+  const query = {
+      text: `INSERT INTO inventory (inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, inv_price, inv_miles, inv_color, classification_id)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+      values: [
+          inv_make,
+          inv_model,
+          inv_year,
+          inv_description,
+          inv_image,
+          inv_thumbnail,
+          inv_price,
+          inv_miles,
+          inv_color,
+          classification_id,
+      ],
+  };
+
+  
+};
+
+
+
 module.exports = {
   getClassifications,
   getInventoryByClassificationId,
   getVehicleById,
+  addClassification,
+  inventoryModel
 };
