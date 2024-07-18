@@ -11,15 +11,10 @@
 <body>
     <h1>Add New Vehicle to Inventory</h1>
 
-    <% if (typeof messages !== 'undefined' && messages.length > 0) { %>
-        <div class="flash-messages">
-            <% messages.forEach(message => { %>
-                <p><%= message %></p>
-            <% }); %>
-        </div>
-    <% } %>
+    <%- messages() %>
+    
 
-    <form action="/inv/add" method="POST" enctype="multipart/form-data">
+    <form action="/inv/add-inventory" method="POST" enctype="multipart/form-data">
         <label for="inv_make">Make:</label>
         <input type="text" id="inv_make" name="inv_make" value="<%= typeof formData !== 'undefined' ? formData.inv_make : '' %>" required>
         

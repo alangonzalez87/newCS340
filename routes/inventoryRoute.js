@@ -18,4 +18,7 @@ router.get("/management", invController.buildManagement)
 router.get('/add-classification', invController.buildAddClassification)
 router.post('/add-classification', validate.classificationRules(), validate.checkClassification, invController.addClassification)
 
+router.get('/add-inventory', invController.renderAddInventory)
+router.post('/add-inventory', validate.inventoryRules(), validate.checkInventory, invController.addInventory)
+
 module.exports = router;
