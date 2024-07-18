@@ -8,11 +8,13 @@
         <% if (typeof flashMessage !== 'undefined') { %>
             <div class="flash-message"><%= flashMessage %></div>
         <% } %>
-
-        <ul>
-            <li><a href="/inv/add-classification">Add New Classification</a></li>
-            <li><a href="/inv/add-inventory">Add New Inventory</a></li>
-        </ul>
+            <div class="management">
+                 <ul class="inv-management">
+                    <li><a href="/inv/add-classification">Add New Classification</a></li>
+                    <li><a href="/inv/add-inventory">Add New Inventory</a></li>
+                </ul>
+            </div>
+       
     </main>
 </main>
 

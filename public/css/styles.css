@@ -37,8 +37,8 @@ body {
 
 nav {
   width: 100%;
-  background-color: #000; 
-  border: 2px solid #000; 
+  background-color: #f70c0c; 
+  border: 2px solid #140464; 
   box-sizing: border-box; 
   padding: 10px; 
 }
@@ -228,8 +228,40 @@ nav ul li:hover {
 }
 
 
-/* public/css/styles.css */
+/* management*/
+.management{
+  max-width: 500px; /* Ajusta este valor según lo necesites */
+  margin: 20px auto; 
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+  border-radius: 4px; 
+  padding: 20px; 
+  background-color: #ffffff; 
+}
 
+.inv-management {
+  list-style-type: none; 
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+.inv-management li {
+  margin-bottom: 10px;
+}
+
+.inv-management li a {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #008CBA;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.inv-management li a:hover {
+  background-color: #005f6b;
+}
+/*estilos */
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
@@ -274,7 +306,7 @@ input[type="password"],
      [type="lname"]{
   width: 100%;
   padding: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
@@ -291,4 +323,92 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
   background-color: #0056b3;
+}
+
+/*add classification*/
+.classification_name {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: bold;
+}
+
+#classification_name {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button[type="submit"] {
+  background-color: #008CBA;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+}
+/* /form add new vehicle / */
+
+.inventory-form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.inventory-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.inventory-form input[type="text"],
+.inventory-form input[type="number"],
+.inventory-form input[type="file"],
+.inventory-form textarea,
+.inventory-form select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.inventory-form textarea {
+    resize: vertical;
+}
+
+.inventory-form button {
+    display: inline-block;
+    background: #333;
+    color: #fff;
+    padding: 10px 15px;
+    text-align: center;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.inventory-form button:hover {
+    background: #555;
+}
+
+.flash-message {
+    color: red;
+    font-weight: bold;
+}
+
+a {
+    text-decoration: none;
+    color: #333;
+}
+
+a:hover {
+    text-decoration: underline;
 }

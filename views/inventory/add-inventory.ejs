@@ -1,19 +1,12 @@
 <!-- views/inventory/add-inventory.ejs -->
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+<%- include('../partials/navigation') %>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Inventory</title>
-    <link rel="stylesheet" href="/styles/main.css">
-</head>
-<body>
+<title>Add Inventory</title>
+<body class="form">
     <h1>Add New Vehicle to Inventory</h1>
-
-    <%- messages() %>
     
-
     <form action="/inv/add-inventory" method="POST" enctype="multipart/form-data">
         <label for="inv_make">Make:</label>
         <input type="text" id="inv_make" name="inv_make" value="<%= typeof formData !== 'undefined' ? formData.inv_make : '' %>" required>
@@ -28,10 +21,10 @@
         <textarea id="inv_description" name="inv_description" required><%= typeof formData !== 'undefined' ? formData.inv_description : '' %></textarea>
         
         <label for="inv_image">Image:</label>
-        <input type="file" id="inv_image" name="inv_image" accept="image/*" required>
+        <input type="file" id="inv_image" name="inv_image" accept="images/vehicles/no-image.png" required>
         
         <label for="inv_thumbnail">Thumbnail:</label>
-        <input type="file" id="inv_thumbnail" name="inv_thumbnail" accept="image/*" required>
+        <input type="file" id="inv_thumbnail" name="inv_thumbnail" accept="images/vehicles/no-image.png" required>
         
         <label for="inv_price">Price:</label>
         <input type="number" id="inv_price" name="inv_price" value="<%= typeof formData !== 'undefined' ? formData.inv_price : '' %>" required>
@@ -43,11 +36,12 @@
         <input type="text" id="inv_color" name="inv_color" value="<%= typeof formData !== 'undefined' ? formData.inv_color : '' %>" required>
         
         <label for="classification_id">Classification:</label>
-        <%= classificationList %>
+        <%- classificationList %>
         
         <button type="submit">Add Vehicle</button>
+        <%- messages() %>
     </form>
-
+    <button ></button>
     <a href="/inv/management">Back to Inventory Management</a>
-</body>
-</html>
+
+    <%- include('../partials/footer') %>

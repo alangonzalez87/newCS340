@@ -8,7 +8,7 @@ const invCont = {}
  * ************************** */
 invCont.buildByClassificationId = async function (req, res, next) {
   const classification_id = req.params.classification_Id
-  const data = await invModel.getInventoryByClassificationId(classificationid)
+  const data = await invModel.getInventoryByClassificationId(classification_id)
   const grid = await utilities.buildClassificationGrid(data)
   let nav = await utilities.getNav()
   const className = data[0].classification_name
@@ -82,12 +82,17 @@ invCont.addClassification = async function (req, res, next) {
 
 invCont.renderAddInventory = async function (req, res, next) {
   try {
+      let nav = await utilities.getNav()
       let classificationList = await utilities.buildClassificationList();
       res.render("inventory/add-inventory", {
-          title: "Add Inventory",
+          title: "Add New Inventory",
+          nav,
           classificationList,
+          formData: {}
       });
   } catch (err) {
+        console.error("Error at: /inv/add-inventory", error)
+        res.status(500).send("Server Error")
       next(err);
   }
 };
@@ -99,15 +104,16 @@ invCont.addInventory = async function (req, res, next) {
           inv_model,
           inv_year,
           inv_description,
-          inv_image,
-          inv_thumbnail,
+          inv_image_default,
+          inv_thumbnail_default,
           inv_price,
           inv_miles,
           inv_color,
           classification_id,
       } = req.body;
 
-      // Lógica de validación de datos aquí si es necesario
+      const inv_image = req.file ? req.file.path : inv_image_default;
+      const inv_thumbnail = req.file ? req.file.path : inv_thumbnail_default;
 
       
       await invModel.addInventory({
@@ -122,13 +128,18 @@ invCont.addInventory = async function (req, res, next) {
           inv_color,
           classification_id,
       });
-      req.flash("success", "Vehicle added successfully!");
-      res.redirect("/inv/management");
-  } catch (err) {
-      
-      req.flash("error", "Failed to add vehicle. Please try again.");
-      res.redirect("/inv/add");
-  }
+      if (result.rowCount === 1) {
+        req.flash("message", "Vehicle added successfully");
+        res.redirect("/inv/management");
+      } else {
+        req.flash("message", "Failed to add vehicle");
+        res.redirect("/inv/add-inventory");
+      }
+    } catch (err) {
+      console.error("Error at: /inv/add-inventory", err);
+      req.flash("message", "Server error");
+      res.redirect("/inv/add-inventory");
+    }
 };
 
 
