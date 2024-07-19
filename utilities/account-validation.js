@@ -65,83 +65,7 @@ validate.classificationRules = () => {
       .withMessage("Classification name cannot contain spaces or special characters."),
   ]
 }
-validate.inventoryRules = () => {
-  return [
-    body("inv_make")
-      .trim()
-      .escape()
-      .notEmpty()
-      .isLength({ min: 1 })
-      .withMessage("Please provide a make.")
-      .matches(/^[a-zA-Z0-9]+$/)
-      .withMessage("Make cannot contain spaces or special characters."),
-    body("inv_model")
-      .trim()
-      .escape()
-      .notEmpty()
-      .isLength({ min: 1 })
-      .withMessage("Please provide a model.")
-      .matches(/^[a-zA-Z0-9]+$/)
-      .withMessage("Model cannot contain spaces or special characters."),
-      body("inv_year")
-      .trim()
-      .escape()
-      .notEmpty()
-      .isLength({ min: 1 })
-      .withMessage("Please provide a year.")
-      .isNumeric()
-      .withMessage("Year cannot contain spaces or special characters."),
-    body("inv_description")
-      .trim()
-      .escape()
-      .notEmpty()
-      .isLength({ min: 1 })
-      .withMessage("Please provide a descripcion.")
-      .matches(/^[a-zA-Z0-9]+$/)
-      .withMessage("Descripcion cannot contain spaces or special characters."),
-    body("inv_image")
-      .trim()
-      .escape()
-      .notEmpty()
-      .isLength({ min: 1 })
-      .withMessage("Please provide a classification name.")
-      .matches(/^[a-zA-Z0-9]+$/)
-      .withMessage("Classification name cannot contain spaces or special characters."),
-    body("inv_thumbnail")
-      .trim()
-      .escape()
-      .notEmpty()
-      .isLength({ min: 1 })
-      .withMessage("Please provide a thumbnail.")
-      .matches(/^[a-zA-Z0-9]+$/)
-      .withMessage("thumbnail cannot contain spaces or special characters."),
-    body("inv_price")
-      .trim()
-      .escape()
-      .notEmpty()
-      .isLength({ min: 1 })
-      .withMessage("Please provide a price.")
-      .isNumeric()
-      .withMessage(" price cannot contain spaces or special characters."),
-    body("inv_miles")
-      .trim()
-      .escape()
-      .notEmpty()
-      .isLength({ min: 1 })
-      .withMessage("Please provide a classification miles.")
-      .isNumeric()
-      .withMessage("Classification miles cannot contain spaces or special characters."),
-    body("inv_color")
-      .trim()
-      .escape()
-      .notEmpty()
-      .isLength({ min: 1 })
-      .withMessage("Please provide a classification color.")
-      .matches(/^[a-zA-Z0-9]+$/)
-      .withMessage("Classification color cannot contain spaces or special characters."),
-    
-  ]
-}
+
 
   /* ******************************
  * Check data and return errors or continue to registration
@@ -184,22 +108,23 @@ validate.checkClassification = async (req, res, next) => {
   }
 }
 
-validate.checkInventory = async (req, res, next) => {
-  const errors = validationResult(req)
-  if (!errors.isEmpty()) {
-    let nav = await utilities.getNav()
-    res.render("inventory/add-inventory", {
-      title: "Add New inventory",
-      nav,
-      flashMessage: req.flash('flashMessage'),
-      errors: errors.array(),
-    })
-  } else {
-    next()
-  }
-}
+// validate.checkInventory = async (req, res, next) => {
+//   const errors = validationResult(req)
+//   if (!errors.isEmpty()) {
+//     let nav = await utilities.getNav()
+//       let classificationList = await utilities.buildClassificationList();
+//       res.render("inventory/add-inventory", {
+//           title: "Add New Inventory",
+//           nav,
+//           classificationList,
+//           errors 
+//       });
+//   } else {
+//     next()
+//   }
+// }
 
 module.exports = validate
 
   
-  module.exports = validate
+ 

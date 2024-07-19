@@ -1,0 +1,48 @@
+<!-- views/inventory/add-inventory.ejs -->
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+<%- include('../partials/navigation') %>
+
+<title>Add Inventory</title>
+<body class="form">
+    <h1>Add New Vehicle to Inventory</h1>
+    <p>All fields are required.</p>
+    
+    <form action="/inv/add-inventory" method="POST" enctype="multipart/form-data">
+        
+        <label for="classification_id">Classification:</label>
+        <%- classificationList %>
+        <label for="inv_make">Make:*</label>
+        <input  type="text" id="inv_make" name="inv_make" required title="input vehicle's make" value="<%=locals.inv_make%>">
+        
+        <label for="inv_model">Model:*</label>
+        <input  type="text" id="inv_model" name="inv_model" required title="input vehicle's model" value="<%=locals.inv_model%>">
+        
+        <label for="inv_year">Year:*</label>
+        <input  type="text" id="inv_year" name="inv_year" required title="input vehicle's year" value="<%=locals.inv_year%>">
+        
+        <label for="inv_description">Description:*</label>
+        <textarea id="inv_description" name="inv_description" required title="input vehicle's description"><%=locals.inv_description%></textarea>
+    
+        <label for="inv_image">Image Path:*</label>
+        <input  type="text" id="inv_image" name="inv_image" required title="input vehicle's image path" value="/images/vehicles/no-image.png">
+        
+        <label for="inv_thumbnail">Thumbnail Path:*</label>
+        <input  type="text" id="inv_thumbnail" name="inv_thumbnail" required title="input vehicle's thumbnail path" value="/images/vehicles/no-image-tn.png">
+        
+        <label for="inv_price">Price:*</label>
+        <input  type="number" id="inv_price" name="inv_price" required placeholder="decimal or integer" title="input Vehicle's price" value="<%=locals.inv_price%>">
+        
+        <label for="inv_miles">Miles:*</label>
+        <input  type="text" id="inv_miles" name="inv_miles" required placeholder="digits only" title="input vehicle's mileage" value="<%=locals.inv_miles%>">
+        
+        <label for="inv_color">Color:*</label>
+        <input  type="text" id="inv_color" name="inv_color" required title="input vehicle's color" value="<%=locals.inv_color%>"> 
+        
+        <button type="submit">Add Vehicle</button>
+        <%- messages() %>
+    </form>
+    <button ><a href="/inv/management">Back to Inventory Management</a></button>
+    
+
+    <%- include('../partials/footer') %>
