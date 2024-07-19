@@ -200,7 +200,11 @@ invCont.addClassification = async function (req, res, next) {
 // }
 
 invCont.addNewVehicle = async (req, res) => {
-  const saveResult = await invModel.saveInventory(req.body)
+  const {inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, 
+    inv_miles, inv_color, inv_price, classification_id} = req.body;
+  const saveResult = await invModel.addInventory (inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, 
+    inv_price,inv_miles, inv_color, classification_id)
+  
   const nav = await utilities.getNav()
   const classificationList = await utilities.buildClassificationList(req.body.classification_id)
 
@@ -218,11 +222,11 @@ invCont.addNewVehicle = async (req, res) => {
       `Congratulations, a new inventory item - 
       ${req.body.inv_make} ${req.body.inv_model} was successfully saved.`
     )
-    res.status(201).render("inventory/add-inventory", vars)
+    res.status(201).render("inventory/newVehicle", vars)
   } else {
     req.flash("notice",
       `Sorry, an inventory item - ${req.body.inv_make} ${req.body.inv_model} was not saved.`)
-    res.status(501).render("inventory/add-inventory", vars)
+    res.status(501).render("inventory/newVehicle", vars)
   }
 }
 

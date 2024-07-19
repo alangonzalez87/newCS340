@@ -21,7 +21,9 @@ router.post('/add-classification', validate.classificationRules(), validate.chec
 
 // router.get('/add-inventory', invController.renderAddInventory)
 router.get("/add-inventory", invController.buildAddNewVehicleView);
-router.post('/add-inventory', invValidate.inventoryRules(),
-invValidate.checkInventory, invController.addNewVehicle)
+router.post('/add-inventory',
+invValidate.inventoryRules(),
+invValidate.checkInventory,
+invController.addNewVehicle)
 
 module.exports = router;

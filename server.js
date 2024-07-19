@@ -30,7 +30,7 @@ app.use(session({
 }));
 
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true })) 
 
 // Flash Messages Middleware
 app.use(require('connect-flash')());
