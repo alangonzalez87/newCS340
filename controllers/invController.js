@@ -95,7 +95,7 @@ invCont.buildByVehicleId = async function (req, res, next) {
 
 invCont.buildManagement = async (req, res, next) =>{
   let nav = await utilities.getNav();
-  let classificationSelect = await utilities.buildClassificationList();
+  const classificationSelect = await utilities.buildClassificationList();
   const links = {
     "classification": "/inv/add-classification",
     "inventory": "/inv/add-inventory"
@@ -107,6 +107,16 @@ invCont.buildManagement = async (req, res, next) =>{
       links    
   });
 } 
+
+invCont.buildManagementView = async (req, res, next)=>{
+  let nav = await utilities.getNav();
+  let classificationSelect = await utilities.buildClassificationList();
+  res.render("./inventory/management",{
+      nav,
+      classificationSelect,
+      title: "Inventory Management"
+  });
+}
 
 /* ***************************
  *  Build add classification view
@@ -227,6 +237,19 @@ invCont.addNewVehicle = async (req, res) => {
     req.flash("notice",
       `Sorry, an inventory item - ${req.body.inv_make} ${req.body.inv_model} was not saved.`)
     res.status(501).render("inventory/newVehicle", vars)
+  }
+}
+
+/* ***************************
+ *  Return Inventory by Classification As JSON
+ * ************************** */
+invCont.getInventoryJSON = async (req, res, next) => {
+  const classification_id = parseInt(req.params.classification_id)
+  const invData = await invModel.getInventoryByClassificationId(classification_id)
+  if (invData[0].inv_id) {
+    return res.json(invData)
+  } else {
+    next(new Error("No data returned"))
   }
 }
 

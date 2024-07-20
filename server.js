@@ -10,10 +10,12 @@ const accountRoute= require("./routes/accountRoute")
 const session = require("express-session");
 const pool = require('./database/');
 const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser")
 
 app.set("view engine", "ejs");
 app.use(expressLayouts);
 app.set("layout", "layouts/layout");
+
 
 app.use(express.static('public'));
 
@@ -29,8 +31,12 @@ app.use(session({
   name: 'sessionId',
 }));
 
+app.use(cookieParser())
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true })) 
+
+app.use(utilities.checkJWTToken)
 
 // Flash Messages Middleware
 app.use(require('connect-flash')());
