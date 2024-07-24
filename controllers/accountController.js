@@ -176,23 +176,23 @@ async function updateAccount(req, res, next) {
   } = req.body;
 
   try {
-    // Verificar la JWT
+    
     const cookieData = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET);
 
-    // Actualizar los datos del usuario en la base de datos
+    
     const modelResult = await accountModel.updateAccount(account_firstname, account_lastname, account_email, account_id);
 
     if (modelResult) {
-      // Eliminar la cookie anterior
+      
       res.clearCookie("jwt");
 
-      // Eliminar la contraseña del resultado del modelo antes de generar la nueva JWT
+      
       delete modelResult.account_password;
 
-      // Generar una nueva JWT
+      
       const accessToken = jwt.sign(modelResult, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 });
 
-      // Establecer la nueva cookie
+      
       const cookieOptions = {
         httpOnly: true,
         maxAge: 3600 * 1000,
@@ -221,9 +221,10 @@ async function updateAccount(req, res, next) {
       });
     }
   } catch (error) {
-    // Manejar errores de verificación de JWT u otros errores
-    console.error(error);
+    
     res.status(500).send('Server error');
+    throw error
+    
   }
 }
 
@@ -240,7 +241,7 @@ async function updatePassword(req, res, next) {
   } = req.body;
 
   try {
-    // Verificar la JWT
+    
     const cookieData = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET);
 
     // Hashear la nueva contraseña de forma asíncrona
