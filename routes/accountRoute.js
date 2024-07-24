@@ -13,6 +13,20 @@ router.post(
   regValidate.checkLoginData,
   utilities.handleErrors(accountController.accountLogin)
 );
+
+router.get("/logout", utilities.handleErrors(accountController.logout));
+router.get("/update", utilities.handleErrors(accountController.update));
+router.post("/update",
+  regValidate.updateAccountRules(),
+  regValidate.checkAccountUpdateData,
+  utilities.handleErrors(accountController.updateAccount));
+
+router.post("/updatePassword",
+  regValidate.updatePasswordRules(),
+  regValidate.checkUpdatePassword,
+  utilities.handleErrors(accountController.updatePassword));  
+
+
 // router.get('/login', accountController.buildLogin)
 router.get("/register", utilities.handleErrors(accountController.buildRegister));
 
@@ -26,7 +40,7 @@ router.post('/register',
 
 
 // Process the login request
-router.get('/', accountController.buildManagement);
+router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildManagement))
 
 
 

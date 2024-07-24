@@ -38,4 +38,15 @@ async function getAccountByEmail (account_email) {
   }
 }
 
-  module.exports = {registerAccount, checkExistingEmail,getAccountByEmail }
+async function getAccountById(account_id){
+  try{
+      const  result = await pool.query("SELECT account_id, account_firstname, account_lastname, account_email FROM PUBLIC.ACCOUNT WHERE account_id = $1",[account_id]);
+      return result.rows[0];
+  }
+  catch(error){
+      return error.message;
+  }
+}
+
+
+  module.exports = {registerAccount, checkExistingEmail,getAccountByEmail,getAccountById }

@@ -119,6 +119,61 @@ Util.checkJWTToken = (req, res, next) =>{
   }
 }
 
+/* ****************************************
+ *  Check Login
+ * ************************************ */
+Util.checkLogin = (req, res, next) => {
+  if (res.locals.loggedin) {
+    next()
+  } else {
+    req.flash("notice", "Please log in.")
+    return res.redirect("/account/login")
+  }
+ }
+
+ /**************
+ * Build header Login/Logout
+ *************/
+Util.getTools = (req) =>{
+  if(req.cookies.jwt){
+      try{
+          const cookieData = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET);
+          let html = `<p>Welcome,</p>
+          <a title="Click to access account management" href="/account/">${cookieData.account_firstname}</a>
+                      <a title="Click to log out" href="/account/logout">Log out</a>`;
+          return html;
+      }
+      catch (error){
+          throw new Error (error);
+      }
+  }
+  else{
+      let html = '<a title="Click to log in" href="/account/login">My account</a>';
+      return html;
+  }
+}
+
+
+Util.authorizedAccounts = (req, res, next) =>{
+  if(req.cookies.jwt){
+      try{
+          const cookieData = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET);
+          if (cookieData.account_type == "Employee" || cookieData.account_type == "Admin"){
+              next();
+          }
+          else{
+              req.flash("notice", "Forbidden access");
+              res.status(401).redirect("/account/login");
+          }
+      }
+      catch (error){
+          throw new Error (error);
+      }
+  }
+  else{
+      res.status(401).redirect("/account/login");
+  }
+}
 
 
 

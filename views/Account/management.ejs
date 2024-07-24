@@ -1,0 +1,23 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+<%- include('../partials/navigation') %>
+<title>Login</title>
+<% if(cookieData.account_type == 'Employee' || cookieData.account_type == 'Admin'){ %>
+    <section>
+        <h2>Manage Inventory</h2>
+        <a class="button" href="/inv/management" title="Go to inventory management page">Inventory Management</a>
+    </section>
+<%}%>
+<!--Displaying providioned title or redirecting response to default index route-->
+<h1>"You're logged in".</h1>
+<a class="button" href="/account/update" title="edit Account">Edit account</a>
+
+<!--Displaying messages in the view-->
+<%- messages() %>
+
+
+
+
+
+
+<%- include('../partials/footer') %>

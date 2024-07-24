@@ -1,0 +1,35 @@
+<!-- views/inventory/add-inventory.ejs -->
+<%- include('../partials/head') %>
+<%- include('../partials/header') %>
+<%- include('../partials/navigation') %>
+
+<title>Delete Inventory</title>
+<body class="form">
+    <h1>Delete Vehicle </h1>
+    <p>All fields are required.</p>
+    
+    <form action="/inv/delete" method="POST" >
+        <p>Confirm Delete- The delete is permanent.</p>
+       
+        <label for="inv_make">Make:*</label>
+        <input  type="text" id="inv_make" name="inv_make" required title="input vehicle's make" value="<%=locals.inv_make%>">
+        
+        <label for="inv_model">Model:*</label>
+        <input  type="text" id="inv_model" name="inv_model" required title="input vehicle's model" value="<%=locals.inv_model%>">
+        
+        <label for="inv_year">Year:*</label>
+        <input  type="text" id="inv_year" name="inv_year" required title="input vehicle's year" value="<%=locals.inv_year%>">
+ 
+        <label for="inv_price">Price:*</label>
+        <input  type="number" id="inv_price" name="inv_price" required placeholder="decimal or integer" title="input Vehicle's price" value="<%=locals.inv_price%>">
+        
+        <button type="submit">Delete Vehicle</button>
+        <input type="hidden" name="inventory_id"
+        <% if(locals.inventory_id) { %> value="<%= locals.inventory_id %>"
+<% } %>>
+        <%- messages() %>
+    </form>
+    <button ><a href="/inv/management">Back to Inventory Management</a></button>
+    
+
+    <%- include('../partials/footer') %>

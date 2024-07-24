@@ -45,13 +45,13 @@ validate.registationRules = () => {
       .trim()
       .notEmpty()
       .isStrongPassword({
-        minLength: 12,
+        minLength: 8,
         minLowercase: 1,
         minUppercase: 1,
         minNumbers: 1,
         minSymbols: 1,
       })
-      .withMessage("Password does not meet requirements.")
+      .withMessage("must be at least 8 characters and contain at least 1 number, 1 capital letter and 1 special character, ")
   ]
 }
 validate.classificationRules = () => {
@@ -124,7 +124,7 @@ validate.loginRules = () =>{
 }
 
 
-validate.checkClassification = async (req, res, next) => {
+validate.checkClassification = async  (req, res, next) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     let nav = await utilities.getNav()
@@ -157,22 +157,116 @@ validate.checkLoginData = async (req, res, next) =>{
   }
 }
 
-// validate.checkInventory = async (req, res, next) => {
-//   const errors = validationResult(req)
-//   if (!errors.isEmpty()) {
-//     let nav = await utilities.getNav()
-//       let classificationList = await utilities.buildClassificationList();
-//       res.render("inventory/add-inventory", {
-//           title: "Add New Inventory",
-//           nav,
-//           classificationList,
-//           errors 
-//       });
-//   } else {
-//     next()
-//   }
-// }
+/*  **********************************
+  *  Update Password Rules
+  * ********************************* */
+validate.updatePasswordRules = () =>{
+  return [
+      //password is required and must be strong
+      body("account_password")
+          .trim()
+          .notEmpty()
+          .isStrongPassword({
+              minLength: 8,
+              minLowercase: 1,
+              minUppercase: 1,
+              minNumbers: 1,
+              minSymbols: 1,
+          })
+          .withMessage("Password does not meet requirements.")
+  ]
+}
 
+
+validate.updateAccountRules = () =>{
+    return [
+        //firstname is required and must be string
+        body("account_firstname")
+            .trim()
+            .escape()
+            .notEmpty()
+            .isLength({ min: 1 })
+            .withMessage("Please provide a first name."), 
+        
+       
+        body("account_lastname")
+            .trim()
+            .escape()
+            .notEmpty()
+            .isLength({ min:2 })
+            .withMessage("Please provide a last name."), //error message
+
+        //valid email is required and cannot already exist in db
+        body("account_email")
+            .trim()
+            .escape()
+            .notEmpty()
+            .isEmail()
+            .normalizeEmail()
+            .withMessage("A valid mail is required.") //error message
+            .custom(async (account_email)=>{
+                const modelResult = await accountModel.checkExistingEmail(account_email);
+                if (modelResult.account_email != body.account_email ){
+                    throw new Error("Email exists. Please log in or use a different email.");
+                }
+            })
+    ]
+}
+
+/* ******************************
+ * Check update data and return errors or continue to update account
+ * ***************************** */
+validate.checkAccountUpdateData = async (req, res, next) =>{
+  const {account_firstname, account_lastname, account_email, account_id} = req.body;
+  let errors = [];
+  errors = validationResult(req);
+  if(!errors.isEmpty()){
+      let nav = await utilities.getNav();
+      let tools = utilities.getTools(req);
+      const cookieData = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET);
+      res.render("account/management",{
+          errors,
+          title: "Account Management",
+          tools,
+          nav,
+          account_firstname,
+          account_lastname,
+          account_email,
+          account_id,
+          cookieData
+      });
+      return
+  }
+  next();
+}
+
+/* ******************************
+* Check update password and return errors or continue to update password
+* ***************************** */
+validate.checkUpdatePassword = async (req, res, next) =>{
+ 
+  let errors = [];
+  errors = validationResult(req);
+  if(!errors.isEmpty()){
+      let nav = await utilities.getNav();
+      let tools = utilities.getTools(req);
+      const cookieData = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET);
+      console.log(cookieData)
+      res.render("account/management",{
+          errors,
+          title: "Account Management",
+          tools,
+          nav,
+          account_firstname: cookieData.account_firstname,
+          account_lastname: cookieData.account_lastname,
+          account_email: cookieData.account_email,
+          account_id: cookieData.account_id,
+          cookieData
+      });
+      return
+  }
+  next();
+}
 module.exports = validate
 
   

@@ -48,6 +48,7 @@ app.use(function(req, res, next){
 // Add nav to response locals
 app.use(async (req, res, next) => {
   res.locals.nav = await utilities.getNav();
+  res.locals.tools = utilities.getTools(req);
   next();
 });
 
@@ -59,11 +60,13 @@ app.use("/account", accountRoute);
 // Error Handling
 app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav();
+  let tools = await utilities.getTools(req);
   console.error(`Error at: "${req.originalUrl}": ${err.message}`);
   const message = err.status == 500 ? err.message : ' Oh no! There was a crash. Maybe try a different route?';
   res.render("errors/error", {
     title: err.status || 'Server Error',
     message,
+    tools,
     nav,
   });
 });

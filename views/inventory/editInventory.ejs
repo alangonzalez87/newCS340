@@ -5,10 +5,10 @@
 
 <title>Add Inventory</title>
 <body class="form">
-    <h1>Add New Vehicle to Inventory</h1>
+    <h1>Edit Vehicle </h1>
     <p>All fields are required.</p>
     
-    <form action="/inv/management" method="POST" >
+    <form action="/inv/update" method="POST" >
         
         <label for="classification_id">Classification:</label>
         <%- classificationList %>
@@ -39,7 +39,10 @@
         <label for="inv_color">Color:*</label>
         <input  type="text" id="inv_color" name="inv_color" required title="input vehicle's color" value="<%=locals.inv_color%>"> 
         
-        <button type="submit">Add Vehicle</button>
+        <button type="submit">Edit Vehicle</button>
+        <input type="hidden" name="inventory_id"
+        <% if(locals.inventory_id) { %> value="<%= locals.inventory_id %>"
+<% } %>>
         <%- messages() %>
     </form>
     <button ><a href="/inv/management">Back to Inventory Management</a></button>

@@ -99,85 +99,6 @@ validate.inventoryRules = () => {
     ]
   }
   
-// validate.inventoryRules = () => {
-//     return [
-//       body("inv_make")
-//         .trim()
-//         .escape()
-//         .notEmpty()
-//         .isLength({ min: 1 })
-//         .withMessage("Please provide a make.")
-//         .matches(/^[a-zA-Z0-9]+$/)
-//         .withMessage("Make cannot contain spaces or special characters."),
-//       body("inv_model")
-//         .trim()
-//         .escape()
-//         .notEmpty()
-//         .isLength({ min: 1 })
-//         .withMessage("Please provide a model.")
-//         .matches(/^[a-zA-Z0-9]+$/)
-//         .withMessage("Model cannot contain spaces or special characters."),
-//         body("inv_year")
-//         .trim()
-//         .escape()
-//         .notEmpty()
-//         .isLength({ min: 1 })
-//         .withMessage("Please provide a year.")
-//         .isNumeric()
-//         .withMessage("Year cannot contain spaces or special characters."),
-//       body("inv_description")
-//         .trim()
-//         .escape()
-//         .notEmpty()
-//         .isLength({ min: 1 })
-//         .withMessage("Please provide a descripcion.")
-//         .matches(/^[a-zA-Z0-9]+$/)
-//         .withMessage("Descripcion cannot contain spaces or special characters."),
-//       body("inv_image")
-//         .trim()
-//         .escape()
-//         .notEmpty()
-//         .isLength({ min: 1 })
-//         .withMessage("Please provide a classification name.")
-//         .matches(/^[a-zA-Z0-9]+$/)
-//         .withMessage("Classification name cannot contain spaces or special characters."),
-//       body("inv_thumbnail")
-//         .trim()
-//         .escape()
-//         .notEmpty()
-//         .isLength({ min: 1 })
-//         .withMessage("Please provide a thumbnail.")
-//         .matches(/^[a-zA-Z0-9]+$/)
-//         .withMessage("thumbnail cannot contain spaces or special characters."),
-//       body("inv_price")
-//         .trim()
-//         .escape()
-//         .notEmpty()
-//         .isLength({ min: 1 })
-//         .withMessage("Please provide a price.")
-//         .isNumeric()
-//         .withMessage(" price cannot contain spaces or special characters."),
-//       body("inv_miles")
-//         .trim()
-//         .escape()
-//         .notEmpty()
-//         .isLength({ min: 1 })
-//         .withMessage("Please provide a classification miles.")
-//         .isNumeric()
-//         .withMessage("Classification miles cannot contain spaces or special characters."),
-//       body("inv_color")
-//         .trim()
-//         .escape()
-//         .notEmpty()
-//         .isLength({ min: 1 })
-//         .withMessage("Please provide a classification color.")
-//         .matches(/^[a-zA-Z0-9]+$/)
-//         .withMessage("Classification color cannot contain spaces or special characters."),
-      
-//     ]
-//   }
-
-
 /* ******************************
  * Check data and return errors or continue to add classification
  * ***************************** */
@@ -236,6 +157,41 @@ validate.checkInventory = async (req, res, next) =>{
         next();
     }
 }
+//goback to the edition
+validate.checkUpdateData = async (req, res, next) =>{
+  const {inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail, 
+      inv_miles, inv_color, inv_price,inv_id, classification_id} = req.body;
+  let errors = [];
+  errors = validationResult(req);
+  if(!errors.isEmpty()){
+      let nav = await utilities.getNav();
+      
+      let classificationList = await utilities.buildClassificationList(classification_id);
+      res.render("inventory/editInventory", {
+          
+          nav,
+          title: "Edit Vehicle",
+          errors,
+          inv_make, 
+          inv_model, 
+          inv_year, 
+          inv_description, 
+          inv_image, 
+          inv_thumbnail,
+          inv_price, 
+          inv_miles, 
+          inv_color, 
+          inv_id,
+          classificationList
+      });
+      return;
+  }
+  else{
+      next();
+  }
+}
+
+
 
 
 
