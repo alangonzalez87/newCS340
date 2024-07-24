@@ -162,7 +162,7 @@ validate.checkLoginData = async (req, res, next) =>{
   * ********************************* */
 validate.updatePasswordRules = () =>{
   return [
-      //password is required and must be strong
+      
       body("account_password")
           .trim()
           .notEmpty()

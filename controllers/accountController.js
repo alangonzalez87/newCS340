@@ -120,66 +120,7 @@ async function accountLogin(req, res) {
   }
  }
 
-// accountController.accountLogin = async (req, res) => {
-//   let nav = await utilities.getNav()
-//   const { account_email, account_password } = req.body;
-//   const vars = {
-//     title: "Login",
-//     nav,
-//     errors: null,
-//     account_email,
-    
-//   };
-//   const accountData = await accountModel.getAccountByEmail(account_email);
 
-//   if (!accountData) {
-//     req.flash("notice", "Please check your credentials and try again.");
-//     return res.status(400).render("account/login", vars);
-//   } else if (accountData.is_blocked) {
-//     req.flash("error", "Your account is blocked. Please contact Admin for further assistance.");
-//     return res.status(403).render("account/login", vars);
-//   }
-
-//   try {
-//     if (await bcrypt.compare(account_password, accountData.account_password)) {
-//       const jwtData = utilities.getDataForJWT(accountData);
-//       res.cookie("jwt", jwtData.accessToken, jwtData.options);
-
-//       return res.redirect("/account/");
-//     } else {
-//       req.flash("error", "Password is incorrect.");
-//       return res.redirect("/account/login");
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     return new Error('Access Forbidden')
-//   }
-// }
-
-//  * Build account management view
-//  *************/
-// accountController.buildManagement = async function(req, res){
-//     let nav = await utilities.getNav();
-    
-//     try{
-//         const cookieData = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET);
-//         const userData = await accountModel.getAccountById(cookieData.account_id);
-//         res.render("./account/management",{
-//             title: "Account Management",
-           
-//             nav,
-//             errors: null,
-//             account_firstname: userData.account_firstname,
-//             account_lastname: userData.account_lastname,
-//             account_email: userData.account_email,
-//             account_id: userData.account_id,
-//             cookieData
-//         });
-//     }
-//     catch (error){
-//         throw new Error (error);
-//     }
-// }
 async function buildManagement(req, res) {
   let nav;
 
@@ -223,87 +164,154 @@ async function buildManagement(req, res) {
 /* ***************************
  *  Update Account
  * ************************** */
-async function updateAccount (req, res, next) {
+
+
+
+async function updateAccount(req, res, next) {
   const {
-      account_firstname,
-      account_lastname,
-      account_email,
-      account_id
+    account_firstname,
+    account_lastname,
+    account_email,
+    account_id
   } = req.body;
 
-  let cookieData = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET);
-  let modelResult = await accountModel.updateAccount(account_firstname, account_lastname, account_email, account_id);
-  console.log(modelResult)
+  try {
+    // Verificar la JWT
+    const cookieData = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET);
 
-  if (modelResult){
+    // Actualizar los datos del usuario en la base de datos
+    const modelResult = await accountModel.updateAccount(account_firstname, account_lastname, account_email, account_id);
+
+    if (modelResult) {
+      // Eliminar la cookie anterior
       res.clearCookie("jwt");
+
+      // Eliminar la contraseña del resultado del modelo antes de generar la nueva JWT
       delete modelResult.account_password;
-      const accessToken = jwt.sign(modelResult, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600});
-          if(process.env.NODE_ENV === "development"){
-              res.cookie("jwt", accessToken, {httpOnly: true, maxAge: 3600 * 1000});
-          }
-          else{
-              res.cookie("jwt", accessToken, {httpOnly: true, secure: true, maxAge: 3600 * 1000});
-          }
+
+      // Generar una nueva JWT
+      const accessToken = jwt.sign(modelResult, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 });
+
+      // Establecer la nueva cookie
+      const cookieOptions = {
+        httpOnly: true,
+        maxAge: 3600 * 1000,
+        secure: process.env.NODE_ENV !== 'development'
+      };
+      res.cookie("jwt", accessToken, cookieOptions);
+
+      // Mostrar mensaje de éxito y redirigir
       req.flash("success", `${modelResult.account_firstname}, your account was successfully updated.`);
       res.redirect("/account/");
-  }
-  else{
-      let nav = await utilities.getNav();
-      let tools = utilities.getTools(req);
-      req.flash("notice",`Sorry, ${account_firstname} something went wrong.`)
-      res.status(501).render("./account/management",{
-          nav,
-          tools,
-          title: `Account Management`,
-          errors: null,
-          account_id,
-          account_firstname, 
-          account_lastname, 
-          account_email,
-          cookieData
-      })
+    } else {
+      // En caso de fallo, renderizar la vista de gestión de cuenta con un mensaje de error
+      const nav = await utilities.getNav();
+      const tools = utilities.getTools(req);
+      req.flash("notice", `Sorry, ${account_firstname} something went wrong.`);
+      res.status(501).render("./account/management", {
+        nav,
+        tools,
+        title: `Account Management`,
+        errors: null,
+        account_id,
+        account_firstname,
+        account_lastname,
+        account_email,
+        cookieData
+      });
+    }
+  } catch (error) {
+    // Manejar errores de verificación de JWT u otros errores
+    console.error(error);
+    res.status(500).send('Server error');
   }
 }
+
 
 
 /* ***************************
  *  Update Password
  * ************************** */
-async function updatePassword (req, res, next) {
-  const {
-      account_password,
-      account_id
-  } = req.body;
-  let cookieData = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET);
-  const hashedPassword = await bcrypt.hashSync(account_password, 10);
-  const modelResult = await accountModel.updateAccountPassword(hashedPassword, account_id);
 
-  if (modelResult){
-      req.flash("success", `${cookieData.account_firstname}, your passsord was successfully updated.`);
+async function updatePassword(req, res, next) {
+  const {
+    account_password,
+    account_id
+  } = req.body;
+
+  try {
+    // Verificar la JWT
+    const cookieData = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET);
+
+    // Hashear la nueva contraseña de forma asíncrona
+    const hashedPassword = await bcrypt.hash(account_password, 10);
+
+    // Actualizar la contraseña en la base de datos
+    const modelResult = await accountModel.updateAccountPassword(hashedPassword, account_id);
+
+    if (modelResult) {
+      req.flash("success", `${cookieData.account_firstname}, your password was successfully updated.`);
       res.redirect("/account/");
-  }
-  else{
-      let nav = await utilities.getNav();
-      let tools = utilities.getTools(req);
+    } else {
+      const nav = await utilities.getNav();
+      const tools = utilities.getTools(req);
       
-      req.flash("notice",`Sorry, ${account_firstname} something went wrong.`)
-      res.status(501).render("account/management",{
-          nav,
-          tools,
-          title: `Account Management`,
-          errors: null,
-          account_firstname: cookieData.account_firstname,
-          account_lastname: cookieData.account_lastname,
-          account_email: cookieData.account_email,
-          account_id: cookieData.account_id,
-          cookieData
-      })
+      req.flash("notice", `Sorry, ${cookieData.account_firstname} something went wrong.`);
+      res.status(501).render("account/management", {
+        nav,
+        tools,
+        title: `Account Management`,
+        errors: null,
+        account_firstname: cookieData.account_firstname,
+        account_lastname: cookieData.account_lastname,
+        account_email: cookieData.account_email,
+        account_id: cookieData.account_id,
+        cookieData
+      });
+    }
+  } catch (error) {
+    // Manejar errores, como problemas con la verificación JWT
+    console.error(error);
+    res.status(500).send('Server error');
   }
 }
 
+// async function updatePassword (req, res, next) {
+//   const {
+//       account_password,
+//       account_id
+//   } = req.body;
+//   let cookieData = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET);
+//   const hashedPassword = await bcrypt.hashSync(account_password, 10);
+//   const modelResult = await accountModel.updateAccountPassword(hashedPassword, account_id);
 
-module.exports = { buildLogin, buildRegister, registerAccount,
+//   if (modelResult){
+//       req.flash("success", `${cookieData.account_firstname}, your passsord was successfully updated.`);
+//       res.redirect("/account/");
+//   }
+//   else{
+//       let nav = await utilities.getNav();
+//       let tools = utilities.getTools(req);
+      
+//       req.flash("notice",`Sorry, ${account_firstname} something went wrong.`)
+//       res.status(501).render("account/management",{
+//           nav,
+//           tools,
+//           title: `Account Management`,
+//           errors: null,
+//           account_firstname: cookieData.account_firstname,
+//           account_lastname: cookieData.account_lastname,
+//           account_email: cookieData.account_email,
+//           account_id: cookieData.account_id,
+//           cookieData
+//       })
+//   }
+// }
+
+
+module.exports = { buildLogin,
+   buildRegister, 
+   registerAccount,
    accountController, 
    buildManagement,
    accountLogin,
