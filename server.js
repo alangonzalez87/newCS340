@@ -57,7 +57,7 @@ app.use(async (req, res, next) => {
 app.get('/', baseController.buildHome);
 app.use("/inv", inventoryRoute);
 app.use("/account", accountRoute);
-app.use( commentRoute);
+app.use('/comment', commentRoute);
 
 // Error Handling
 app.use(async (err, req, res, next) => {
