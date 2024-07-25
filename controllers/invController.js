@@ -336,6 +336,28 @@ invCont.deleteInventory = async (req, res, next) =>{
 }
 
 
+invCont.addComment= async(req, res)=> {
+  const { item_id, comment_text } = req.body;
+  const user_id = req.user.user_id; 
+  try {
+    await commentModel.addComment(item_id, user_id, comment_text);
+    req.flash('success', 'Comment added successfully');
+  } catch (error) {
+    req.flash('error', 'Error adding comment');
+  }
+  res.redirect(`/inventory/item/${item_id}`);
+}
+
+invCont.getComment= async(req, res)=>  {
+  const { item_id } = req.params;
+  try {
+    const comments = await commentModel.getCommentsByItemId(item_id);
+    res.render('inventory/item', { comments });
+  } catch (error) {
+    res.status(500).send('Error retrieving comments');
+  }
+}
+
 
 
 

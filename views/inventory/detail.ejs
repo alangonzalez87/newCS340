@@ -8,6 +8,23 @@
   <h1><%= title %></h1>
   <div class="vehicle-detail-container">
     <%- html %>
+    <!-- Formulario para añadir un comentario -->
+<form action="/comments/add" method="post">
+  <input type="hidden" name="inv_id" value="<%= inventory.inv_id %>">
+  <textarea name="comment_text" required></textarea>
+  <button type="submit">Add Comment</button>
+</form>
+
+<!-- Lista de comentarios -->
+<div id="comments">
+  <% comments.forEach(comment => { %>
+      <div class="comment">
+          <p><strong><%= comment.account_firstname %> <%= comment.account_lastname %>:</strong> <%= comment.comment_text %></p>
+          <small><%= comment.comment_date %></small>
+      </div>
+  <% }) %>
+</div>
+
   </div>
 </main>
 

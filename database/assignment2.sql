@@ -5,6 +5,22 @@ UPDATE account
 SET account_type = 'Admin'
 WHERE email = 'tony@starkent.com';
 
+-- database create comments
+CREATE TABLE comments (
+    comment_id SERIAL PRIMARY KEY,
+    inventory_id INT NOT NULL,
+    user_id INT NOT NULL,
+    comment_text TEXT NOT NULL,
+    comment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (inventory_id) REFERENCES inventory(inventory_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+ALTER TABLE comments
+ADD COLUMN parent_comment_id INTEGER REFERENCES comments(comment_id) ON DELETE CASCADE;
+
+
+
 DELETE FROM account
 WHERE email = 'tony@starkent.com';
 

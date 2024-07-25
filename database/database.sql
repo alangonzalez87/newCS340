@@ -92,3 +92,17 @@ WHERE inv_model = 'Hummer';
 UPDATE public.inventory
 SET inv_image = REPLACE(inv_image, '/images/', '/images/vehicles/'),
     inv_thumbnail = REPLACE(inv_thumbnail, '/images/', '/images/vehicles/');
+
+-- database create comments
+CREATE TABLE comments (
+    comment_id SERIAL PRIMARY KEY,
+    inventory_id INT NOT NULL,
+    user_id INT NOT NULL,
+    comment_text TEXT NOT NULL,
+    comment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (inventory_id) REFERENCES inventory(inventory_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+
+ALTER TABLE comments
+ADD COLUMN parent_comment_id INTEGER REFERENCES comments(comment_id) ON DELETE CASCADE;

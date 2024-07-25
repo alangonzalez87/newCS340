@@ -7,6 +7,7 @@ const utilities = require('./utilities/index');
 const baseController = require("./controllers/baseController");
 const inventoryRoute = require("./routes/inventoryRoute");
 const accountRoute= require("./routes/accountRoute")
+const commentRoute = require('./routes/commentRoute');
 const session = require("express-session");
 const pool = require('./database/');
 const bodyParser = require("body-parser")
@@ -56,6 +57,7 @@ app.use(async (req, res, next) => {
 app.get('/', baseController.buildHome);
 app.use("/inv", inventoryRoute);
 app.use("/account", accountRoute);
+app.use("/comments", commentRoute);
 
 // Error Handling
 app.use(async (err, req, res, next) => {

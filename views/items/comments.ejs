@@ -1,0 +1,38 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+<%- include('partials/navigation') %>
+
+ <!-- Sección de comentarios -->
+ <h2>Comments</h2>
+ <form method="post" action="/comments/add">
+    <textarea name="commentText" required></textarea>
+    <input type="hidden" name="parentCommentId" value="">
+    <button type="submit">Add Comment</button>
+</form>
+
+<% comments.forEach(comment => { %>
+    <div>
+        <p><%= comment.comment_text %></p>
+        <p>Posted by user ID: <%= comment.account_id %> at <%= comment.created_at %></p>
+
+        <form method="post" action="/comments/add">
+            <textarea name="commentText" required></textarea>
+            <input type="hidden" name="parentCommentId" value="<%= comment.comment_id %>">
+            <button type="submit">Reply</button>
+        </form>
+
+        <% if (comment.responses.length > 0) { %>
+            <div>
+                <% comment.responses.forEach(response => { %>
+                    <div>
+                        <p><%= response.comment_text %></p>
+                        <p>Posted by user ID: <%= response.account_id %> at <%= response.created_at %></p>
+                    </div>
+                <% }) %>
+            </div>
+        <% } %>
+    </div>
+<% }) %>
+
+
+<%- include('partials/footer') %>
