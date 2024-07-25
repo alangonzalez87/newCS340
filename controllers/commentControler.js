@@ -20,7 +20,7 @@ const addComment = async (req, res) => {
     const accountId = req.user.id; 
     try {
         await commentModel.addComment(commentText, accountId, parentCommentId);
-        res.redirect('/comment/comments');
+        res.redirect('/comment/');
     } catch (error) {
         console.error('Error adding comment:', error);
         res.status(500).send('Server error');
