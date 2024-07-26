@@ -101,7 +101,7 @@ CREATE TABLE comments (
     comment_text TEXT NOT NULL,
     comment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (inventory_id) REFERENCES inventory(inventory_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
+    -- FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 ALTER TABLE comments

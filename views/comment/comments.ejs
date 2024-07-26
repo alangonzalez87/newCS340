@@ -1,9 +1,4 @@
-<%- include('../partials/head') %>
-<%- include('../partials/header') %>
-<%- include('../partials/navigation') %>
 
-
- 
  <h2>Comments</h2>
  <form method="post" action="/comment/comments">
     <textarea name="commentText" required></textarea>
@@ -16,7 +11,7 @@
         <p><%= comment.comment_text %></p>
         <p>Posted by user ID: <%= comment.account_id %> at <%= comment.created_at %></p>
 
-        <form method="post" action="/comments">
+        <form method="post" action="/comment/comments">
             <textarea name="commentText" required></textarea>
             <input type="hidden" name="parentCommentId" value="<%= comment.comment_id %>">
             <button type="submit">Reply</button>

@@ -240,9 +240,7 @@ validate.checkAccountUpdateData = async (req, res, next) =>{
   next();
 }
 
-/* ******************************
-* Check update password and return errors or continue to update password
-* ***************************** */
+
 validate.checkUpdatePassword = async (req, res, next) =>{
  
   let errors = [];

@@ -4,10 +4,15 @@ const commentController = require('../controllers/commentControler');
 const validate = require('../utilities/commentValidation'); 
 const utilities = require("../utilities/");
 
-// Ruta para obtener todos los comentarios
+
 router.get('/comments', commentController.getComments);
 
-// Ruta para agregar un nuevo comentario
-router.post('/comments', validate.checkCommentData, utilities.handleErrors(commentController.addComment));
+
+router.post('/comments',
+    validate.addCommentRules(),
+    validate.checkCommentData,
+    commentController.addComment
+);
+
 
 module.exports = router;
