@@ -185,22 +185,14 @@ async function updateAccount(req, res, next) {
     if (modelResult) {
       
       res.clearCookie("jwt");
-
-      
       delete modelResult.account_password;
-
-      
       const accessToken = jwt.sign(modelResult, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 });
-
-      
       const cookieOptions = {
         httpOnly: true,
         maxAge: 3600 * 1000,
         secure: process.env.NODE_ENV !== 'development'
       };
       res.cookie("jwt", accessToken, cookieOptions);
-
-      // Mostrar mensaje de éxito y redirigir
       req.flash("success", `${modelResult.account_firstname}, your account was successfully updated.`);
       res.redirect("/account/");
     } else {
@@ -277,37 +269,7 @@ async function updatePassword(req, res, next) {
   }
 }
 
-// async function updatePassword (req, res, next) {
-//   const {
-//       account_password,
-//       account_id
-//   } = req.body;
-//   let cookieData = jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET);
-//   const hashedPassword = await bcrypt.hashSync(account_password, 10);
-//   const modelResult = await accountModel.updateAccountPassword(hashedPassword, account_id);
 
-//   if (modelResult){
-//       req.flash("success", `${cookieData.account_firstname}, your passsord was successfully updated.`);
-//       res.redirect("/account/");
-//   }
-//   else{
-//       let nav = await utilities.getNav();
-//       let tools = utilities.getTools(req);
-      
-//       req.flash("notice",`Sorry, ${account_firstname} something went wrong.`)
-//       res.status(501).render("account/management",{
-//           nav,
-//           tools,
-//           title: `Account Management`,
-//           errors: null,
-//           account_firstname: cookieData.account_firstname,
-//           account_lastname: cookieData.account_lastname,
-//           account_email: cookieData.account_email,
-//           account_id: cookieData.account_id,
-//           cookieData
-//       })
-//   }
-// }
 
 
 module.exports = { buildLogin,

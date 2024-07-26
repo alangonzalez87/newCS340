@@ -50,6 +50,7 @@ app.use(function(req, res, next){
 app.use(async (req, res, next) => {
   res.locals.nav = await utilities.getNav();
   res.locals.tools = utilities.getTools(req);
+  res.locals.respond= utilities.buildCommentList()
   next();
 });
 

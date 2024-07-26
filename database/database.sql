@@ -97,7 +97,7 @@ SET inv_image = REPLACE(inv_image, '/images/', '/images/vehicles/'),
 CREATE TABLE comments (
     comment_id SERIAL PRIMARY KEY,
     inventory_id INT NOT NULL,
-    user_id INT NOT NULL,
+    account_id INT NOT NULL,
     comment_text TEXT NOT NULL,
     comment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (inventory_id) REFERENCES inventory(inventory_id),

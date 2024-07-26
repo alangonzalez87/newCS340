@@ -8,6 +8,6 @@ const utilities = require("../utilities/");
 router.get('/comments', commentController.getComments);
 
 // Ruta para agregar un nuevo comentario
-router.post('/comment/', validate.checkCommentData, utilities.handleErrors(commentController.addComment));
+router.post('/comments', validate.checkCommentData, utilities.handleErrors(commentController.addComment));
 
 module.exports = router;

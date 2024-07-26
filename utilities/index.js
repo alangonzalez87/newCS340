@@ -1,4 +1,5 @@
 const invModel = require("../models/inventory-model")
+const pool = require('../database/');
 const Util = {}
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
@@ -175,6 +176,26 @@ Util.authorizedAccounts = (req, res, next) =>{
   }
 }
 
+
+Util.buildCommentList = async () => {
+  const query = 'SELECT * FROM comments ORDER BY created_at DESC';
+  const result = await pool.query(query);
+  const comments = result.rows;
+
+  let commentList = '<div class="comments">';
+
+  comments.forEach((comment) => {
+      commentList += `
+          <div class="comment">
+              <p>${comment.comment_text}</p>
+              <button onclick="replyToComment(${comment.comment_id})">Responder</button>
+          </div>
+      `;
+  });
+
+  commentList += '</div>';
+  return commentList;
+};
 
 
 module.exports = Util
