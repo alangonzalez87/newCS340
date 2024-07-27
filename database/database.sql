@@ -103,6 +103,25 @@ CREATE TABLE comments (
     FOREIGN KEY (inventory_id) REFERENCES inventory(inventory_id),
     -- FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
-
+-- Alter TAble
 ALTER TABLE comments
 ADD COLUMN parent_comment_id INTEGER REFERENCES comments(comment_id) ON DELETE CASCADE;
+
+ALTER TABLE comments
+ADD COLUMN account_id INT;
+
+ALTER TABLE comments
+ADD CONSTRAINT fk_account_id
+FOREIGN KEY (account_id) REFERENCES accounts(account_id);
+
+-- Asegúrate de actualizar account_id con valores válidos de la tabla `accounts`
+UPDATE comments
+SET account_id = 1 -- o el valor adecuado según tu caso
+WHERE comment_id = 1; -- Actualiza el `comment_id` según sea necesario
+
+
+SELECT c.comment_id, c.comment_date, c.parent_comment_id, c.created_at, c.comment_text,
+       a.account_firstname, a.account_lastname
+FROM comments c
+JOIN accounts a ON c.account_id = a.account_id;
+

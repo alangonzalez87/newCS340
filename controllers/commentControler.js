@@ -21,13 +21,13 @@ commentController.getComments = async (req, res) => {
 
 commentController.addComment = async (req, res) => {
     try {
-        const { commentText, comment_author, parentCommentId } = req.body;
-        console.log('Adding comment:', commentText, comment_author, parentCommentId);
+        const { comment_text, comment_author, parentCommentId } = req.body;
+        console.log('Adding comment:', comment_text, comment_author, parentCommentId);
 
-       const newComment= await commentModel.addComment(commentText, comment_author, parentCommentId);
+       const newComment= await commentModel.addComment(comment_text, comment_author, parentCommentId);
 
         console.log('Comment added successfully. Redirecting...', newComment);
-        res.redirect('/comments'); 
+        res.redirect('/comment/comments'); 
     } catch (error) {
         console.error('Error adding comment:', error);
         res.status(500).send('Server error');

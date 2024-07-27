@@ -48,7 +48,8 @@ validate.checkCommentData = async (req, res, next) => {
             title: 'Add Comment',
             comment_text,
             comment_author,
-            parent_comment_id
+            parent_comment_id,
+            comments:[]
         });
         return;
     }
