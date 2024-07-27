@@ -1,33 +1,37 @@
-<h2>Comments</h2>
-<form method="post" action="/comment/comments">
-    <textarea name="comment_text" required></textarea>
-    <input type="hidden" name="parent_comment_id" value="">
-    <input type="hidden" name="comment_author" value="user_id"> <!-- Ajustar para obtener el ID del usuario -->
-    <button type="submit">Add Comment</button>
-</form>
+<div class="form-container">
+    <h2>Comments</h2>
 
-<% (comments || []).forEach(comment => { %>
-    <div>
-        <p><%= comment.comment_text %></p>
-        <p>Posted : <%= comment.comment_author %> at <%= comment.created_at %></p>
-
-        <form method="post" action="/comment/comments">
-            <textarea name="comment_text" required></textarea>
-            <input type="hidden" name="parent_comment_id" value="<%= comment.comment_id %>">
-            <input type="hidden" name="comment_author" value="account_id"> 
-            <button type="submit">Reply</button>
-        </form>
-
-        <% if (comment.responses && comment.responses.length > 0) { %>
-            <div style="margin-left: 20px;">
-                <% comment.responses.forEach(response => { %>
-                    <div>
-                        <p><%= response.comment_text %></p>
-                        <p>Posted : <%= response.comment_author %> at <%= response.created_at %></p>
-                    </div>
-                <% }) %>
-            </div>
-        <% } %>
-    </div>
-<% }) %>
-
+    <form method="post" action="/comment/comments">
+        <textarea name="comment_text" required placeholder="Add your comment here..."></textarea>
+        <input type="hidden" name="parent_comment_id" value="">
+        <input type="hidden" name="comment_author" value="account_id"> 
+        <button type="submit">Add Comment</button>
+    </form>
+    
+    <% (comments || []).forEach(comment => { %>
+        <div class="comment-container <%= comment.is_current ? 'current-comment' : '' %>">
+            <p><%= comment.comment_text %></p>
+            <p>Posted : <%= comment.account_id %> 
+    
+            <form method="post" action="/comment/comments">
+                <textarea name="comment_text" required placeholder="Reply here..."></textarea>
+                <input type="hidden" name="parent_comment_id" value="<%= comment.account_id %>">
+                <input type="hidden" name="comment_author" value="account_id"> 
+                <button type="submit">Reply</button>
+            </form>
+    
+            <% if (comment.responses && comment.responses.length > 0) { %>
+                <div >
+                    <% comment.responses.forEach(response => { %>
+                        <div>
+                            <p><%= response.comment_text %></p>
+                            <p>Posted : <%= response.account_id %> 
+                        </div>
+                    <% }) %>
+                </div>
+            <% } %>
+        </div>
+    <% }) %>
+    
+    
+</div>

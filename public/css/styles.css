@@ -412,3 +412,30 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+/* comentario destacado */
+.form-container {
+  width: 50%; 
+  margin: 0 auto; 
+  padding: 20px; 
+  background-color: #ffffff; 
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+  border-radius: 8px; 
+}
+.form-container h2{
+  margin: 0 auto;
+}
+.comment-form textarea, .reply-form textarea {
+  width: 100%; 
+  height: 100px; 
+  margin-bottom: 10px; 
+  padding: 10px; 
+  border: 1px solid #ddd; 
+  border-radius: 4px; 
+}
+
+.comment-container.current-comment {
+  background-color: #a5c7e5a7; 
+  border: 2px solid #b0c4de; 
+  padding: 15px;
+}
