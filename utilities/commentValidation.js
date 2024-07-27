@@ -43,7 +43,7 @@ validate.checkCommentData = async (req, res, next) => {
     let errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-        res.render('comments', { 
+        res.render('comment/comments', {
             errors: errors.array(),
             title: 'Add Comment',
             comment_text,
@@ -52,6 +52,7 @@ validate.checkCommentData = async (req, res, next) => {
         });
         return;
     }
+      
     next();
 };
 

@@ -1,6 +1,5 @@
-
- <h2>Comments</h2>
- <form method="post" action="/comment/comments">
+<h2>Comments</h2>
+<form method="post" action="/comment/comments">
     <textarea name="commentText" required></textarea>
     <input type="hidden" name="parentCommentId" value="">
     <button type="submit">Add Comment</button>
@@ -9,7 +8,7 @@
 <% comments.forEach(comment => { %>
     <div>
         <p><%= comment.comment_text %></p>
-        <p>Posted by user ID: <%= comment.account_id %> at <%= comment.created_at %></p>
+        <p>Posted by user ID: <%= comment.comment_author %> at <%= comment.created_at %></p>
 
         <form method="post" action="/comment/comments">
             <textarea name="commentText" required></textarea>
@@ -17,18 +16,16 @@
             <button type="submit">Reply</button>
         </form>
 
-        <% if (comment.responses.length > 0) { %>
-            <div>
+        <% if (comment.responses && comment.responses.length > 0) { %>
+            <div style="margin-left: 20px;">
                 <% comment.responses.forEach(response => { %>
                     <div>
                         <p><%= response.comment_text %></p>
-                        <p>Posted by user ID: <%= response.account_id %> at <%= response.created_at %></p>
-                        
+                        <p>Posted by user ID: <%= response.comment_author %> at <%= response.created_at %></p>
                     </div>
                 <% }) %>
             </div>
         <% } %>
     </div>
 <% }) %>
-
 

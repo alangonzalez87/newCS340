@@ -8,11 +8,11 @@ require("dotenv").config()
  * Constructs the nav HTML unordered list
  ************************** */
 Util.getNav = async function (req, res, next) {
-  let data = await invModel.getClassifications()
-  let list = "<ul>"
-  list += '<li><a href="/" title="Home page">Home</a></li>'
+  let data = await invModel.getClassifications();
+  let list = "<ul>";
+  list += '<li><a href="/" title="Home page">Home</a></li>';
   data.rows.forEach((row) => {
-    list += "<li>"
+    list += "<li>";
     list +=
       '<a href="/inv/type/' +
       row.classification_id +
@@ -20,12 +20,12 @@ Util.getNav = async function (req, res, next) {
       row.classification_name +
       ' vehicles">' +
       row.classification_name +
-      "</a>"
-    list += "</li>"
-  })
-  list += "</ul>"
-  return list
-}
+      "</a>";
+    list += "</li>";
+  });
+  list += "</ul>";
+  return list;
+};
 
 /* **************************************
 * Build the classification view HTML
@@ -177,25 +177,6 @@ Util.authorizedAccounts = (req, res, next) =>{
 }
 
 
-Util.buildCommentList = async () => {
-  const query = 'SELECT * FROM comments ORDER BY created_at DESC';
-  const result = await pool.query(query);
-  const comments = result.rows;
-
-  let commentList = '<div class="comments">';
-
-  comments.forEach((comment) => {
-      commentList += `
-          <div class="comment">
-              <p>${comment.comment_text}</p>
-              <button onclick="replyToComment(${comment.comment_id})">Responder</button>
-          </div>
-      `;
-  });
-
-  commentList += '</div>';
-  return commentList;
-};
 
 
 module.exports = Util
